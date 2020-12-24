@@ -1,0 +1,27 @@
+version: '3'
+
+volumes:
+  situs:
+
+services: 
+  izin:
+    image: progrestian/izin
+    environment:
+      - IZIN_SECRET=${IZIN_SECRET}
+    volumes:
+      - /var/lib/izin/database:/var/lib/izin/database
+  situs:
+    image: progrestian/situs
+    tty: true
+    volumes:
+      - situs:/situs
+  nginx:
+    build: ./nginx
+    environment:
+      - NGINX_ENTRYPOINT_QUIET_LOGS=1
+    volumes:
+      - situs:/situs
+      - /home/user/ssl/progrestian.com:/home/user/ssl/progrestian.com
+    ports:
+      - '80:80'
+      - '443:443'
